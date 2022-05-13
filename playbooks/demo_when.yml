@@ -1,0 +1,10 @@
+---
+- hosts: "{{ hosts }}"
+  become: yes
+  tasks:
+  - name: crear directorio
+    file:
+      path: /var/tmp/iag
+      mode: 750
+      state: directory
+    when: ansible_default_ipv4.address == "192.168.17.102"
