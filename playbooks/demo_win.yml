@@ -1,0 +1,52 @@
+---
+- hosts: "{{ hosts }}"
+  tasks:
+    - name: Crear dir
+      win_file:
+        path: C:\temp
+        state: directory
+    - name: descargamos sw apache
+      win_get_url: 
+        url: 
+        dest: c:\temp
+    - name: instalar apache
+      win_package:
+        path: 
+        state: present
+    - name: modificar config
+      win_lineinfile:
+        path: c:\httpd.conf
+        regex: "^ServerAdmin"
+        line: "ServerAdmin: test@example.com"
+    - name: crear pagina
+      win_copy:
+        content: "hello world!"
+        dest: "/var/www/html/index.html"
+    - name: check service
+      win_service:
+        name: Apache2.2
+      register: apache_info
+    - name: contenido var apache_info
+      debug:
+        msg: "{{ apache_info }}"
+        #msg: "{{ apache_info.exists }}"
+    - name: crear servicio
+      win_shell: install
+      args:
+        executable: cmd
+      when: not apache_info.exists
+    - name: "levantar servicio apache"
+      win_service:
+        name: Apache2.2
+        state: started
+    - name: abrir puerto 80 en fw
+      win_firewall_rule:
+        name: http
+        localport: 80
+        action: allow
+        direction: in
+        protocol: tcp
+        state: present
+        enabled: yes
+
+      
