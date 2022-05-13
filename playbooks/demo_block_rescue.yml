@@ -9,10 +9,12 @@
         with_items: 
         - linux01
         - linux02
-        - linux03
+        - linux03  
       rescue:
-        - debug:
-            msg: "Debes levantar apache"
+        - name: arranca apache"
+          service:
+            name: httpd
+            state: started
       always:
         - debug:
             msg: "Siempre ejecuto esto"
