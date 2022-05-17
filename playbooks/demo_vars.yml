@@ -1,0 +1,7 @@
+---
+- hosts: " {{ hosts }} "
+  become: yes
+  tasks:
+    - name: muestra variables
+      debug:
+        msg: "dns: {{ dns }} - domain: {{ domain }}"
